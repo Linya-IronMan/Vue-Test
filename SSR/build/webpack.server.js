@@ -1,0 +1,31 @@
+const path = require('path');
+
+const { merge } = require('webpack-merge');
+const base = require('./webpack.base')
+
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+
+const resolve = dir => {
+    return path.resolve(__dirname, dir)
+}
+
+module.exports = merge(base, {
+    entry: {
+        server: resolve('../src/entry-server.js'),
+    },
+    target: 'node',
+    output: {
+        libraryTarget: 'commonjs2',
+    },
+    plugins: [
+        new HtmlWebpackPlugin({
+            filename: 'index.ssr.html',
+            template: resolve('../public/index.ssr.html'),
+            // remove Chunks server 指的是入口么？
+            excludeChunks: ['server'],
+            minify: {
+                removeComments: false,
+            }
+        })
+    ]
+})
